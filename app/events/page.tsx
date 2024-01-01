@@ -55,7 +55,7 @@ export default function EventsPage() {
             </div>
             <div className="mx-6 my-2">
                 {tournaments.map((t: TournamentDetails) => {
-                    return <TournamentCard tournament={t} onClick={handleSelectTournament}></TournamentCard>
+                    return <TournamentCard tournament={t} onClick={handleSelectTournament} key={`events-${t.id}`}></TournamentCard>
                 })}
             </div>
         </>

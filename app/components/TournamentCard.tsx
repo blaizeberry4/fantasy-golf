@@ -12,6 +12,7 @@ export type TournamentDetails = {
     countryCode: string;
     tour: string;
     startDate: number;
+    id: string;
     [key: string]: any;
 }
 

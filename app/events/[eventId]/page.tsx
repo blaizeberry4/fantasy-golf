@@ -14,7 +14,7 @@ export default function EventPage() {
         <div>
             <div className="grid grid-cols-2 gap-2">
                 { picks.map((pick, index) => (
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center" key={`tournament-pick-${index}`}>
                         <img className="rounded-full" src={pick ? pick.headshot.replace("${HEIGHT}", '64').replace("${WIDTH}", '64') : '/unknown_person.png'} height={64} width={64} />
                         <p className="ml-2">{pick?.displayName ?? `Player ${index + 1}`}</p>
                     </div>
@@ -29,7 +29,7 @@ export default function EventPage() {
             />
             <div className="mx-6 my-2 overflow-scroll">
                 {field.map((player) => {
-                    return <div className="flex flex-row border-gray-200 border-b items-center">
+                    return <div className="flex flex-row border-gray-200 border-b items-center" key={`event-field-player-${player.id}`}>
                         <img src={player.headshot.replace("${HEIGHT}", '64').replace("${WIDTH}", '64')} />
                         <p className="ml-2">{player.displayName}</p>
                     </div>
