@@ -21,6 +21,9 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        </head>
         <body className={inter.className}>
           <div className="flex flex-col h-screen overflow-hidden">
             <header className="w-full border-b border-grey p-4 bg-purple-700 h-16"><MainNav /></header>
