@@ -14,12 +14,12 @@ export function MainNav({
       {...props}
     >
       <div className="flex items-center justify-between w-full">
-        <div>
+        <div className="hidden md:block">
           <Link
             href="/"
             className="text-sm font-medium transition-colors hover:text-primary"
           >
-            <Image src="/pupgolf.png" alt="me" width={80} height={80} />
+            <Image className="bg-white pr-2 rounded-full" src="/pupgolf.png" alt="me" width={80} height={80} />
           </Link>
         </div>
         <div className="hidden md:block">
@@ -36,7 +36,7 @@ export function MainNav({
             Leaderboard
           </Link>
         </div>
-        <div>
+        <div className="hidden md:block">
           <UserNav />
         </div>
       </div>
