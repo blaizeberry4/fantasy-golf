@@ -5,7 +5,6 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { MainNav } from '@/components/main-nav'
 import { BottomNav } from '@/components/bottom-nav'
-import Head from 'next/head'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -28,9 +27,6 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <Head>
-          <link rel="apple-touch-icon" href="/pupgolf.png" />
-        </Head>
         <body className={inter.className}>
           <div className="flex flex-col h-screen overflow-hidden">
             <header className="w-full border-b border-grey p-4 bg-purple-700 h-16"><MainNav /></header>
