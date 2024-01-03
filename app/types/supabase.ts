@@ -120,7 +120,6 @@ export interface Database {
       pga_tour_tournament_picks_stroke_play: {
         Row: {
           created_at: string
-          id: string
           pick_index: number
           player_id: string
           tournament_id: string
@@ -129,7 +128,6 @@ export interface Database {
         }
         Insert: {
           created_at?: string
-          id: string
           pick_index: number
           player_id: string
           tournament_id: string
@@ -138,7 +136,6 @@ export interface Database {
         }
         Update: {
           created_at?: string
-          id?: string
           pick_index?: number
           player_id?: string
           tournament_id?: string
@@ -324,7 +321,6 @@ export interface Database {
       pga_tour_tournament_picks_stroke_play_enriched: {
         Row: {
           pick_created_at: string | null
-          pick_id: string | null
           pick_index: number | null
           pick_updated_at: string | null
           player_country: string | null
