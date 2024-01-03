@@ -10,7 +10,7 @@ export function MainNav({
 }: React.HTMLAttributes<HTMLElement>) {
   return (
     <nav
-      className={cn("flex items-center", className)}
+      className={cn("flex items-center p-4 hidden md:block", className)}
       {...props}
     >
       <div className="flex items-center justify-between w-full">
