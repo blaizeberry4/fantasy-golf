@@ -32,7 +32,7 @@ export default function RootLayout({
           <div className="flex flex-col h-screen overflow-hidden">
             <header className="w-full border-b border-grey bg-purple-700"><MainNav /></header>
             <main className="flex-grow overflow-y-scroll">{children}</main>
-            <footer className="p-4 h-24 md:hidden text-white"><BottomNav /></footer>
+            <footer className="h-24 md:hidden text-white"><BottomNav /></footer>
           </div>
         </body>
       </html>
