@@ -1,7 +1,4 @@
-import { TournamentDetails } from "@/components/TournamentCard"
-
-
-export const tournaments: TournamentDetails[] = [
+export const tournaments = [
   {
     "tournamentName": "Fortinet Championship",
     "tour": "PGA",

@@ -1,23 +1,27 @@
 'use client';
 
-import { TournamentCard, TournamentDetails } from "@/components/TournamentCard";
+import { TournamentCard } from "@/components/TournamentCard";
 import { Select } from "@/components/select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { tournaments as __tournaments } from "./data";
+import { useAuth } from "@clerk/nextjs";
+import { supabaseClient } from "@/lib/supabase";
+import { PGATourTournament } from "@/types/supabase-derived";
 
-const filterTournamentsByYear = (year: string, t: TournamentDetails) => {
-    const startDate = new Date(t.startDate)
+
+const filterTournamentsByYear = (year: string, t: PGATourTournament) => {
+    const startDate = new Date(t.start_date)
     const currentYear = startDate.getFullYear()
 
     return currentYear === parseInt(year)
 }
 
-const filterTournamentsByTour = (tour: string, t: TournamentDetails) => {
-    return tour === 'All' || t.tour === tour
+const filterTournamentsByTour = (tour: string, t: PGATourTournament) => {
+    return tour === 'All' || tour === 'PGA'
 }
 
-const filterTournamentsByEvents = (events: string, t: TournamentDetails) => {
-    const startDate = new Date(t.startDate)
+const filterTournamentsByEvents = (events: string, t: PGATourTournament) => {
+    const startDate = new Date(t.start_date)
 
     if (events === "Completed" && startDate.getTime() > Date.now()) {
         return false
@@ -30,19 +34,33 @@ const filterTournamentsByEvents = (events: string, t: TournamentDetails) => {
     return true
 }
 
-const handleSelectTournament = () => {
-    console.log('handleSelectTournament')
-}
-
 export default function EventsPage() {
+    const [pgaTourTournaments, setPgaTourTournaments] = useState<PGATourTournament[]>([])
     const [year, setYear] = useState("2024")
     const [tour, setTour] = useState("All")
     const [events, setEvents] = useState("Upcoming")
+    const { getToken } = useAuth()
 
-    const tournaments = __tournaments
-        .filter((t: TournamentDetails) => filterTournamentsByYear(year, t))
-        .filter((t: TournamentDetails) => filterTournamentsByTour(tour, t))
-        // .filter((t: TournamentDetails) => filterTournamentsByEvents(events, t))
+    useEffect(() => {
+        (async () => {
+            const client = await supabaseClient(getToken)
+
+            const { data: tournamentData, error } = await client
+                .from('pga_tour_tournaments')
+                .select('*')
+
+            if (error) {
+                console.error(error)
+            }
+
+            setPgaTourTournaments(tournamentData!)
+        })()
+    }, [])
+
+    const tournaments = pgaTourTournaments
+        .filter((t) => filterTournamentsByYear(year, t))
+        .filter((t) => filterTournamentsByTour(tour, t))
+        // .filter((t) => filterTournamentsByEvents(events, t))
 
     console.log(tournaments)
 
@@ -54,8 +72,8 @@ export default function EventsPage() {
                 <Select label="Events" options={["All", "Completed", "Upcoming"]} defaultValue="Upcoming" onChange={e => setEvents(e.target.value)}  />
             </div>
             <div className="mx-6 my-2">
-                {tournaments.map((t: TournamentDetails) => {
-                    return <TournamentCard tournament={t} onClick={handleSelectTournament} key={`events-${t.id}`}></TournamentCard>
+                {tournaments.map((t: PGATourTournament) => {
+                    return <TournamentCard tournament={t} key={`events-${t.id}`}></TournamentCard>
                 })}
             </div>
         </>
