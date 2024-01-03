@@ -29,7 +29,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <Head>
-          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+          <link rel="apple-touch-icon" href="/pupgolf.png" />
         </Head>
         <body className={inter.className}>
           <div className="flex flex-col h-screen overflow-hidden">
