@@ -31,8 +31,8 @@ export default function RootLayout({
         <body className={inter.className}>
           <div className="flex flex-col h-screen overflow-hidden">
             <header className="w-full border-b border-grey bg-purple-700 hidden md:block h-16"><MainNav /></header>
-            <main className="h-[calc(100vh-24px)] md:h-[calc(100vh-16px)] overflow-y-scroll">{children}</main>
-            <footer className="h-24 md:hidden text-white"><BottomNav /></footer>
+            <main className="fixed bottom-24 md:bottom-0 top-0 md:top-16 overflow-y-scroll w-full">{children}</main>
+            <footer className="fixed bottom-0 h-24 md:hidden text-white"><BottomNav /></footer>
           </div>
         </body>
       </html>

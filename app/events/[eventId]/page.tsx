@@ -109,7 +109,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
 
     return (
         <div className="flex flex-col">
-            <div className="sticky top-0">
+            <div className="sticky top-0 bg-white">
                 <div className="flex flex-row w-full items-center border border-gray-200">
                     <Image className="object-cover rounded-full ml-4 p-2 h-20 w-20 md:h-36 md:w-36" src={field[0]?.tournament_logo!} alt="" height={48} width={48} />
                     <div className="flex flex-col justify-between p-2 leading-normal">
