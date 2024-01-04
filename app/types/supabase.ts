@@ -58,6 +58,8 @@ export interface Database {
           current_status: string | null
           current_thru: string | null
           current_total_score: string | null
+          latest_odds_to_win: string | null
+          latest_tee_time: string | null
           player_id: string
           round_1_score: string | null
           round_2_score: string | null
@@ -75,6 +77,8 @@ export interface Database {
           current_status?: string | null
           current_thru?: string | null
           current_total_score?: string | null
+          latest_odds_to_win?: string | null
+          latest_tee_time?: string | null
           player_id: string
           round_1_score?: string | null
           round_2_score?: string | null
@@ -92,6 +96,8 @@ export interface Database {
           current_status?: string | null
           current_thru?: string | null
           current_total_score?: string | null
+          latest_odds_to_win?: string | null
+          latest_tee_time?: string | null
           player_id?: string
           round_1_score?: string | null
           round_2_score?: string | null
@@ -284,6 +290,8 @@ export interface Database {
           current_status: string | null
           current_thru: string | null
           current_total_score: string | null
+          latest_odds_to_win: string | null
+          latest_tee_time: string | null
           player_country: string | null
           player_country_code: string | null
           player_first_name: string | null

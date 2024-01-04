@@ -108,7 +108,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
     }, [])
 
     return (
-        <>
+        <div className="flex flex-col">
             <div className="sticky top-0">
                 <div className="flex flex-row w-full items-center border border-gray-200">
                     <Image className="object-cover rounded-full ml-4 p-2 h-20 w-20 md:h-36 md:w-36" src={field[0]?.tournament_logo!} alt="" height={48} width={48} />
@@ -169,9 +169,9 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                                 player => search === '' ||
                                 player.player_first_name!.toLowerCase().includes(search.toLowerCase()) ||
                                 player.player_last_name!.toLowerCase().includes(search.toLowerCase())
-                            ).map((player) => {
+                            ).sort((a, b) => { return parseInt(a.latest_odds_to_win || '0') - parseInt(b.latest_odds_to_win || '0') }).map((player) => {
                                 return <button 
-                                    className="flex flex-row w-full border-gray-200 border-b items-center py-1 hover:bg-gray-200"
+                                    className="grid grid-cols-6 gap-1 w-full border-gray-200 border-b items-center py-1 hover:bg-gray-200"
                                     key={`event-field-player-${player.player_id}`}
                                     onClick={async () => {
                                         const client = await supabaseClient(getToken)
@@ -207,7 +207,8 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                                     }}
                                 >
                                     <Image className="rounded-full" src={player.player_icon_url!} alt={player.player_first_name + ' ' + player.player_last_name} height={36} width={36} />
-                                    <p className="ml-2">{player.player_first_name + ' ' + player.player_last_name}</p>
+                                    <p className="ml-2 col-span-4 text-left">{player.player_first_name + ' ' + player.player_last_name}</p>
+                                    <p className="font-bold text-sm">{player.latest_odds_to_win}</p>
                                 </button>
                             })}
                         </div>
@@ -250,6 +251,6 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                     }
                 </div>
             </div>
-        </>
+        </div>
     )
 }
