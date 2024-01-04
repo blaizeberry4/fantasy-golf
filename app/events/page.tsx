@@ -66,12 +66,12 @@ export default function EventsPage() {
 
     return (
         <>
-            <div className="flex flex-row mx-6 my-2">
+            <div className="sticky top-0 pt-3 pb-1 bg-white flex flex-row px-6">
                 <Select label="Season" options={["2023", "2024", "2025"]} defaultValue="2024" onChange={e => setYear(e.target.value)} />
                 <Select label="Tour" options={["All", "PGA", "LIV"]} defaultValue="All" onChange={e => setTour(e.target.value)} />
                 <Select label="Events" options={["All", "Completed", "Upcoming"]} defaultValue="Upcoming" onChange={e => setEvents(e.target.value)}  />
             </div>
-            <div className="mx-6 my-2">
+            <div className="mx-6 pb-3">
                 {tournaments.map((t: PGATourTournament) => {
                     return <TournamentCard tournament={t} key={`events-${t.id}`}></TournamentCard>
                 })}
