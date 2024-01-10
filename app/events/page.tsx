@@ -60,6 +60,12 @@ export default function EventsPage() {
     const tournaments = pgaTourTournaments
         .filter((t) => filterTournamentsByYear(year, t))
         .filter((t) => filterTournamentsByTour(tour, t))
+        .sort((a, b) => {
+            const aDate = new Date(a.start_date)
+            const bDate = new Date(b.start_date)
+
+            return aDate.getTime() - bDate.getTime()
+        })
         // .filter((t) => filterTournamentsByEvents(events, t))
 
     console.log(tournaments)

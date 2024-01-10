@@ -7,17 +7,12 @@ import { PGATourTournamentFieldStrokePlayEnriched, PGATourTournamentPickStrokePl
 import Image from "next/image";
 import {
     Drawer,
-    DrawerClose,
     DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
-    DrawerTrigger,
 } from "@/components/ui/drawer"
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/types/supabase";
-import { set } from "date-fns";
 
 
 const REQUIRED_PICKS = 4
@@ -65,7 +60,6 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
     const [picks, setPicks] = useState<PGATourTournamentPickStrokePlayEnriched[]>([])
     const [pickEditIndex, setPickEditIndex] = useState<number | null>(null)
     const [competitors, setCompetitors] = useState<User[]>([])
-    const [isLocked, setIsLocked] = useState<boolean>(false)
     const [search, setSearch] = useState("")
 
     const myPicks = ensurePicks(picks.filter((pick) => pick.user_id === user?.id))

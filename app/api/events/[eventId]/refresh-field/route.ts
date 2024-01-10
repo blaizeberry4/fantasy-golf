@@ -27,7 +27,7 @@ const getDataForTournament = async (tournamentId: string) => {
 
     const tournamentSlug = slugify(data.name, { lower: true })
     const tournamentUrl = `https://www.pgatour.com/tournaments/${data.season}/${tournamentSlug}/${tournamentId}/field`
-    const response = await fetch(tournamentUrl)
+    const response = await fetch(tournamentUrl, { cache: 'no-store' })
     const html = await response.text()
     const $ = loadHTML(html)
     const nextDataEl = $('#__NEXT_DATA__') as Cheerio<Element>
@@ -108,6 +108,21 @@ const parsePlayers = (fieldData: any) => {
     }))
 }
 
+const parseTournament = (tournamentData: any) => {
+    if (!tournamentData) {
+        return null
+    }
+
+    return {
+        id: tournamentData.id,
+        name: tournamentData.name,
+        season: tournamentData.season,
+        status: tournamentData.tournamentStatus,
+        end_date: tournamentData.endDate,
+        updated_at: new Date().toISOString(),
+    }
+}
+
 export async function GET(request: NextRequest, { params }: { params: { eventId: string } }) {
     const tournamentData = await getDataForTournament(params.eventId)
 
@@ -119,6 +134,14 @@ export async function GET(request: NextRequest, { params }: { params: { eventId:
 
     const playerData = parsePlayers(tournamentData.field)
 
+    const { error: playersError } = await supabase
+        .from('pga_tour_players')
+        .upsert(playerData, { onConflict: 'id', ignoreDuplicates: true })
+
+    if (playersError) {
+        throw playersError
+    }
+
     if (fieldData) {
         const { error } = await supabase
             .from("pga_tour_tournament_fields_stroke_play")
@@ -129,8 +152,17 @@ export async function GET(request: NextRequest, { params }: { params: { eventId:
         }
     }
 
+    if (tournamentData.tournament?.tournamentStatus) {
+        await supabase.from("pga_tour_tournaments").update({
+            status: tournamentData.tournament?.tournamentStatus,
+            // current_round: tournamentData.tournament?.currentRound,
+            updated_at: new Date().toISOString(),
+        }).match({ id: params.eventId })
+    }
+
     return NextResponse.json({
         field: fieldData,
         players: playerData,
+        raw: tournamentData,
     })
 }
