@@ -179,6 +179,21 @@ export interface Database {
           }
         ]
       }
+      pga_tour_tournament_stroke_play_position_scores: {
+        Row: {
+          position: string
+          score: number
+        }
+        Insert: {
+          position: string
+          score: number
+        }
+        Update: {
+          position?: string
+          score?: number
+        }
+        Relationships: []
+      }
       pga_tour_tournaments: {
         Row: {
           city: string
@@ -298,10 +313,22 @@ export interface Database {
           player_icon_url: string | null
           player_id: string | null
           player_last_name: string | null
+          position_score: number | null
           round_1_score: string | null
           round_2_score: string | null
           round_3_score: string | null
           round_4_score: string | null
+          scoring_cut_bonus: number | null
+          scoring_made_cut: boolean | null
+          scoring_shot_low_round_1_score: boolean | null
+          scoring_shot_low_round_1_score_bonus: number | null
+          scoring_shot_low_round_2_score: boolean | null
+          scoring_shot_low_round_2_score_bonus: number | null
+          scoring_shot_low_round_3_score: boolean | null
+          scoring_shot_low_round_3_score_bonus: number | null
+          scoring_shot_low_round_4_score: boolean | null
+          scoring_shot_low_round_4_score_bonus: number | null
+          scoring_total_score: number | null
           tournament_course_name: string | null
           tournament_dates: string | null
           tournament_id: string | null
@@ -358,6 +385,68 @@ export interface Database {
           },
           {
             foreignKeyName: "pga_tour_tournament_picks_stroke_play_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "pga_tour_tournaments"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      pga_tour_tournament_stroke_play_field_scoring: {
+        Row: {
+          cut_bonus: number | null
+          made_cut: boolean | null
+          player_id: string | null
+          position_score: number | null
+          shot_low_round_1_score: boolean | null
+          shot_low_round_1_score_bonus: number | null
+          shot_low_round_2_score: boolean | null
+          shot_low_round_2_score_bonus: number | null
+          shot_low_round_3_score: boolean | null
+          shot_low_round_3_score_bonus: number | null
+          shot_low_round_4_score: boolean | null
+          shot_low_round_4_score_bonus: number | null
+          total_score: number | null
+          tournament_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pga_tour_tournament_fields_stroke_play_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "pga_tour_players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pga_tour_tournament_fields_stroke_play_tournament_id_fkey"
+            columns: ["tournament_id"]
+            isOneToOne: false
+            referencedRelation: "pga_tour_tournaments"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      pga_tour_tournament_stroke_play_field_scoring_features: {
+        Row: {
+          made_cut: boolean | null
+          player_id: string | null
+          position_score: number | null
+          shot_low_round_1_score: boolean | null
+          shot_low_round_2_score: boolean | null
+          shot_low_round_3_score: boolean | null
+          shot_low_round_4_score: boolean | null
+          tournament_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pga_tour_tournament_fields_stroke_play_player_id_fkey"
+            columns: ["player_id"]
+            isOneToOne: false
+            referencedRelation: "pga_tour_players"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pga_tour_tournament_fields_stroke_play_tournament_id_fkey"
             columns: ["tournament_id"]
             isOneToOne: false
             referencedRelation: "pga_tour_tournaments"

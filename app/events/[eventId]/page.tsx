@@ -120,7 +120,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                         const playerFieldEntry = field.find((player) => player.player_id === pick?.player_id)
 
                         const playerScoringSummary = pick ?
-                            <p className="text-xs font-bold text-center">{playerFieldEntry?.current_total_score} / 0 pts</p> :
+                            <p className="text-xs font-bold text-center">{playerFieldEntry?.current_total_score} / {playerFieldEntry?.scoring_total_score} pts</p> :
                             <p className="text-xs font-bold text-center">-- pts</p>
                         
                         return (
@@ -227,7 +227,7 @@ export default function EventPage({ params }: { params: { eventId: string } }) {
                                         const playerName = pick ? pick.player_first_name! + ' ' + pick.player_last_name! : `Player ${index + 1}`
                                         const playerFieldEntry = field.find((player) => player.player_id === pick?.player_id)
                                         const playerScoringSummary = pick ?
-                                            <p className="ml-4 text-xs font-bold">{playerFieldEntry?.current_total_score} / 0 pts</p> :
+                                            <p className="ml-4 text-xs font-bold">{playerFieldEntry?.current_total_score} / {playerFieldEntry?.scoring_total_score} pts</p> :
                                             <p className="ml-4 text-xs font-bold">-- pts</p>
 
                                         return (
