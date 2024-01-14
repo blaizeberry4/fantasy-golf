@@ -56,7 +56,7 @@ export function DataTable<TData, TValue>({
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} className="bg-black text-white">
+                  <TableHead key={header.id} className="bg-black text-white text-xs text-center">
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -87,7 +87,7 @@ export function DataTable<TData, TValue>({
                         row.getParentRow() ? 'p-1 text-xs'
                             : row.getIsExpanded() ? 'p-4 text-sm text-white'
                                 : 'p-4 text-sm'
-                    } pl-4`}>
+                    } text-center`}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -141,8 +141,6 @@ const columnDef: ColumnDef<TournamentPerformance, any>[] = [
         id: 'currentPosition',
         header: 'POS',
         cell: ({ row }) => row.original.currentPosition,
-        size: 40,
-        enableResizing: false
     }),
     // columnHelper.accessor(row => row.iconUrl, {
     //     id: 'iconUrl',
@@ -151,11 +149,15 @@ const columnDef: ColumnDef<TournamentPerformance, any>[] = [
     // }),
     columnHelper.accessor(row => row.displayName, {
         id: 'displayName',
-        header: 'Player',
+        header: 'PLAYER',
         cell: ({ row, getValue }) => (
-            <div className="flex flex-row items-center">
-                <Image className="rounded-full mr-3" alt={row.original.displayName} src={row.original.iconUrl} height={32} width={32} />
-                {getValue()}
+            <div className="flex flex-col">
+                <div className="flex justify-center">
+                    <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.iconUrl} height={32} width={32} />
+                </div>
+                <div className="flex justify-center">
+                    <p className="text-center">{getValue()}</p>
+                </div>
             </div>
             // <div className="flex items-center">
             //     <button type='button' onClick={ row.getToggleExpandedHandler() }>
@@ -166,6 +168,7 @@ const columnDef: ColumnDef<TournamentPerformance, any>[] = [
             //     </button>
             // </div>
         ), //row.original.displayName,
+        size: 64
     }),
     // columnHelper.accessor(row => row.round1Score, {
     //     id: 'round1Score',
