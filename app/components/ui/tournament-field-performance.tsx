@@ -157,11 +157,11 @@ const columnDef: ColumnDef<TournamentPerformance, any>[] = [
                 <div className="flex flex-row justify-around">
                     <div className="flex flex-col justify-center">
                         <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[0] || '/transparent.png'} height={16} width={16} />
-                        <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[1] || '/transparent.png'} height={16} width={16} />
+                        <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[2] || '/transparent.png'} height={16} width={16} />
                     </div>
                     <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.iconUrl} height={32} width={32} />
                     <div className="flex flex-col justify-center">
-                        <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[2] || '/transparent.png'} height={16} width={16} />
+                        <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[1] || '/transparent.png'} height={16} width={16} />
                         <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[3] || '/transparent.png'} height={16} width={16} />
                     </div>
                 </div>
