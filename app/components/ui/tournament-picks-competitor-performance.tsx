@@ -21,7 +21,7 @@ import {
 import Image from "next/image"
 
 import { PGATourTournament, PGATourTournamentFieldStrokePlayEnriched, PGATourTournamentPickStrokePlayEnriched, User } from "@/types/supabase-derived";
-import { parseScore } from "@/lib/scoring";
+import { parseScore, parseThru, presentScore } from "@/lib/scoring";
 
 type DataTableProps<TData, TValue> = {
     columns: ColumnDef<TData, TValue>[]
@@ -125,6 +125,7 @@ type TournamentPerformance = {
     round4Score: string,
     shotRound4LowScore: boolean,
     currentRound?: number | null,
+    currentRoundScore: string | null,
     thru: string,
     cumulativeScore: string,
     totalScore: number | null,
@@ -181,16 +182,6 @@ const columnDef: ColumnDef<TournamentPerformance, any>[] = [
     //     header: 'R3',
     //     cell: ({ row }) => row.original.round3Score,
     // }),
-    // columnHelper.accessor(row => row.round4Score, {
-    //     id: 'round4Score',
-    //     header: 'R4',
-    //     cell: ({ row }) => row.original.round4Score,
-    // // }),
-    // columnHelper.accessor(row => row.thru, {
-    //     id: 'thru',
-    //     header: 'THRU',
-    //     cell: ({ row }) => row.original.thru,
-    // }),
     columnHelper.accessor(row => row.cumulativeScore, {
         id: 'cumulativeScore',
         header: 'CUM',
@@ -200,6 +191,16 @@ const columnDef: ColumnDef<TournamentPerformance, any>[] = [
         id: 'totalScore',
         header: 'PTS',
         cell: ({ row }) => row.original.totalScore,
+    }),
+    columnHelper.accessor(row => row.thru, {
+        id: 'round_score',
+        header: 'TODAY',
+        cell: ({ row }) => row.original.currentRoundScore,
+    }),
+    columnHelper.accessor(row => row.thru, {
+        id: 'thru',
+        header: 'THRU',
+        cell: ({ row }) => row.original.thru,
     }),
 ]
 
@@ -232,6 +233,7 @@ const present = ({
             round4Score: '-',
             shotRound4LowScore: false,
             currentRound: null,
+            currentRoundScore: null,
             thru: '-',
             cumulativeScore: '-',
             totalScore: 0,
@@ -262,7 +264,8 @@ const present = ({
             round4Score: playerFieldEntry.round_4_score ?? '-',
             shotRound4LowScore: playerFieldEntry.scoring_shot_low_round_4_score ?? false,
             currentRound: playerFieldEntry.current_round,
-            thru: playerFieldEntry.current_thru ?? '-',
+            currentRoundScore: playerFieldEntry.current_round_score || 'E',
+            thru: (playerFieldEntry.current_thru || new Date(playerFieldEntry.latest_tee_time!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) ?? '-',
             cumulativeScore: playerFieldEntry.current_total_score ?? '-',
             totalScore: playerFieldEntry.scoring_total_score,
             isAppUser: false,
@@ -283,6 +286,11 @@ const present = ({
         performance.cumulativeScore = performance.subRows.reduce((acc, row) => acc + (parseScore(row.cumulativeScore) || 0), 0).toString()
         performance.totalScore = performance.subRows.reduce((acc, row) => acc + (row.totalScore || 0), 0)
         performance.subRows = performance.subRows.sort((a, b) => b.totalScore! - a.totalScore!)
+
+        const thru = performance.subRows.reduce((acc, row) => Math.min(acc, parseThru(row.thru)), 18)
+        performance.thru = thru < 18 ? thru.toString() : 'F'
+        
+        performance.currentRoundScore = presentScore(performance.subRows.reduce((acc, row) => acc + (parseScore(row.currentRoundScore) || 0), 0))
     })
 
     const totalScores = Object.values(competitorPerformance).map((performance) => performance.totalScore).sort((a, b) => b! - a!)

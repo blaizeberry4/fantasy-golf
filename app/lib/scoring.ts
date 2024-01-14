@@ -19,5 +19,21 @@ export const presentScore = ( score: number | null | undefined ): string | null 
         return 'E'
     }
 
-    return score.toString()
+    return score > 0 ? '+' + score.toString() : score.toString()
+}
+
+export const parseThru = (thru: string | null | undefined): number => {
+    if (thru === null || thru === undefined) {
+        return 0
+    }
+
+    if (thru === 'F' || thru === 'CUT' || thru === 'WD' || thru === 'DQ' || thru === 'F*' || thru === '-') {
+        return 18
+    }
+
+    if (thru === '-') {
+        return 0
+    }
+
+    return parseInt(thru.replace('*', ''))
 }
