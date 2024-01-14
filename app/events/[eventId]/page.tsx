@@ -6,7 +6,7 @@ export const revalidate = 0;
 export async function generateStaticParams() {
     const { data } = await supabase.from('pga_tour_tournaments').select('id')
 
-    return data?.map(({ id }) => ({ eventId: id }))    
+    return data?.map(({ id }) => ({ eventId: id })) || [] 
 }
 
 const loadEventPageData = async (eventId: string) => {

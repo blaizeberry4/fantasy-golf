@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/drawer"
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/types/supabase";
-import CompetitorEventSummary from "@/components/ui/competitor-event-summary";
+import CompetitorPicksSummary from "@/components/ui/competitor-picks-summary";
 import TournamentPicksUser from "@/components/ui/tournament-picks-user";
 import TournamentBanner from "@/components/ui/tournament-banner";
 import PlayerSelector from "@/components/ui/player-selector";
@@ -145,11 +145,11 @@ export default function Tournament({ tournament, field, competitors, picks }: To
                 <div className="grid grid-cols-12 gap-y-6">
                     {
                         competitorsWithPicks.map(competitor => {
-                            return <CompetitorEventSummary
+                            return <CompetitorPicksSummary
                                 competitor={competitor}
                                 picks={competitor.picks}
                                 field={field}
-                                key={`tournament-${tournament.id}-competitor-${competitor.id}`}
+                                key={`tournament-${tournament.id}-competitor-${competitor.id}-picks`}
                             />
                         })
                     }
