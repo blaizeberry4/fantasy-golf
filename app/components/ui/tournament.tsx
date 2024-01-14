@@ -17,6 +17,9 @@ import TournamentPicksUser from "@/components/ui/tournament-picks-user";
 import TournamentBanner from "@/components/ui/tournament-banner";
 import PlayerSelector from "@/components/ui/player-selector";
 import TournamentPicksCompetitorPerformance from "./tournament-picks-competitor-performance";
+import TournamentFieldPerformance from "./tournament-field-performance";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+
 
 
 const REQUIRED_PICKS = 4
@@ -70,6 +73,7 @@ export default function Tournament({ tournament, field, competitors, picks }: To
     const [myPicks, setMyPicks] = useState<PGATourTournamentPickStrokePlayEnriched[]>(
         ensurePicks(picks.filter(pick => pick.user_id === userId))
     )
+    const [tableView, setTableView] = useState<'field' | 'picks'>('picks')
 
     if (!isSignedIn) {
         return <div>Sign in to view this page</div>
@@ -86,13 +90,25 @@ export default function Tournament({ tournament, field, competitors, picks }: To
         <div className="flex flex-col">
             <div className="sticky top-0 bg-white">
                 <TournamentBanner tournamentDetails={tournament} />
-                <TournamentPicksCompetitorPerformance
+                <ToggleGroup type="single">
+                    <ToggleGroupItem value="picks" onClick={() => setTableView('picks')}>PUP Board</ToggleGroupItem>
+                    <ToggleGroupItem value="field" onClick={() => setTableView('field')}>Leaderboard</ToggleGroupItem>
+                </ToggleGroup>
+
+                { tableView === 'picks' ? (<TournamentPicksCompetitorPerformance
                     tournament={tournament}
                     field={field}
                     competitors={competitors}
                     picks={picks}
                     userId={userId}
-                />
+                />) : '' }
+                { tableView === 'field' ? (<TournamentFieldPerformance
+                    tournament={tournament}
+                    field={field}
+                    competitors={competitors}
+                    picks={picks}
+                    userId={userId}
+                />) : '' }
             </div>
         </div>
     ) : (

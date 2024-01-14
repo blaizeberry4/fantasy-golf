@@ -46,6 +46,12 @@ export function DataTable<TData, TValue>({
     },
     onExpandedChange: setExpanded,
     getExpandedRowModel: getExpandedRowModel(),
+    initialState: {
+        columnVisibility: {
+            isMe: false,
+            competitorImageUrls: false,
+        }
+    }
   })
  
   return (
@@ -75,7 +81,7 @@ export function DataTable<TData, TValue>({
               <TableRow
                 key={row.id}
                 className={`${
-                    row.getParentRow() ? 'bg-gray-200 hover:bg-gray-200' 
+                    row.getValue('isMe') ? 'bg-purple-200 hover:bg-purple-200' 
                         : row.getIsExpanded() ? 'bg-purple-600 hover:bg-purple-600'
                             : 'bg-white hover:bg-white'
                 }`}
@@ -129,7 +135,7 @@ type TournamentPerformance = {
     thru: string,
     cumulativeScore: string,
     totalScore: number | null,
-    isAppUser: boolean,
+    competitorImageUrls: string[],
     isMe: boolean,
     selectionCount?: number | null,
     subRows: TournamentPerformance[],
@@ -143,58 +149,33 @@ const columnDef: ColumnDef<TournamentPerformance, any>[] = [
         header: 'POS',
         cell: ({ row }) => row.original.currentPosition,
     }),
-    // columnHelper.accessor(row => row.iconUrl, {
-    //     id: 'iconUrl',
-    //     header: '',
-    //     cell: ({ row }) => <Image className="rounded-full" alt={row.original.displayName} src={row.original.iconUrl} height={32} width={32} />,
-    // }),
     columnHelper.accessor(row => row.displayName, {
         id: 'displayName',
         header: 'PLAYER',
         cell: ({ row, getValue }) => (
             <div className="flex flex-col">
-                <div className="flex justify-center">
+                <div className="flex flex-row justify-around">
+                    <div className="flex flex-col justify-center">
+                        <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[0] || '/transparent.png'} height={16} width={16} />
+                        <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[1] || '/transparent.png'} height={16} width={16} />
+                    </div>
                     <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.iconUrl} height={32} width={32} />
+                    <div className="flex flex-col justify-center">
+                        <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[2] || '/transparent.png'} height={16} width={16} />
+                        <Image className="rounded-full object-center" alt={row.original.displayName} src={row.original.competitorImageUrls[3] || '/transparent.png'} height={16} width={16} />
+                    </div>
                 </div>
                 <div className="flex justify-center">
                     <p className="text-center">{getValue()}</p>
                 </div>
             </div>
-            // <div className="flex items-center">
-            //     <button type='button' onClick={ row.getToggleExpandedHandler() }>
-            //         <div className="flex flex-row items-center">
-            //             <Image className="rounded-full mr-3" alt={row.original.displayName} src={row.original.iconUrl} height={32} width={32} />
-            //             {getValue()}
-            //         </div>
-            //     </button>
-            // </div>
-        ), //row.original.displayName,
+        ),
         size: 64
     }),
-    // columnHelper.accessor(row => row.round1Score, {
-    //     id: 'round1Score',
-    //     header: 'R1',
-    //     cell: ({ row }) => row.original.round1Score,
-    // }),
-    // columnHelper.accessor(row => row.round2Score, {
-    //     id: 'round2Score',
-    //     header: 'R2',
-    //     cell: ({ row }) => row.original.round2Score,
-    // }),
-    // columnHelper.accessor(row => row.round3Score, {
-    //     id: 'round3Score',
-    //     header: 'R3',
-    //     cell: ({ row }) => row.original.round3Score,
-    // }),
     columnHelper.accessor(row => row.cumulativeScore, {
         id: 'cumulativeScore',
         header: 'CUM',
         cell: ({ row }) => row.original.cumulativeScore,
-    }),
-    columnHelper.accessor(row => row.totalScore, {
-        id: 'totalScore',
-        header: 'PTS',
-        cell: ({ row }) => row.original.totalScore,
     }),
     columnHelper.accessor(row => row.thru, {
         id: 'round_score',
@@ -206,9 +187,39 @@ const columnDef: ColumnDef<TournamentPerformance, any>[] = [
         header: 'THRU',
         cell: ({ row }) => row.original.thru,
     }),
+    columnHelper.accessor(row => row.round1Score, {
+        id: 'round1Score',
+        header: 'R1',
+        cell: ({ row }) => row.original.round1Score,
+    }),
+    columnHelper.accessor(row => row.round2Score, {
+        id: 'round2Score',
+        header: 'R2',
+        cell: ({ row }) => row.original.round2Score,
+    }),
+    columnHelper.accessor(row => row.round3Score, {
+        id: 'round3Score',
+        header: 'R3',
+        cell: ({ row }) => row.original.round3Score,
+    }),
+    columnHelper.accessor(row => row.round3Score, {
+        id: 'round4Score',
+        header: 'R4',
+        cell: ({ row }) => row.original.round4Score,
+    }),
+    columnHelper.accessor(row => row.isMe, {
+        id: 'isMe',
+        header: '',
+        enableHiding: true,
+    }),
+    columnHelper.accessor(row => row.selectionCount, {
+        id: 'competitorImageUrls',
+        header: '',
+        enableHiding: true
+    }),
 ]
 
-export type TournamentPicksCompetitorPerformanceProps = {
+export type TournamentFieldPerformanceProps = {
     competitors: User[],
     picks: PGATourTournamentPickStrokePlayEnriched[],
     field: PGATourTournamentFieldStrokePlayEnriched[],
@@ -222,40 +233,13 @@ const present = ({
     field,
     tournament,
     userId,
-}: TournamentPicksCompetitorPerformanceProps): TournamentPerformance[] => {
-    const competitorPerformance = competitors.reduce<Record<string, TournamentPerformance>>((acc, competitor) => {
-        const newPerformance: TournamentPerformance = {
-            currentPosition: '1',
-            iconUrl: competitor.image_url!,
-            displayName: competitor.first_name + ' ' + competitor.last_name.slice(0, 1) + '.',
-            round1Score: '-',
-            shotRound1LowScore: false,
-            round2Score: '-',
-            shotRound2LowScore: false,
-            round3Score: '-',
-            shotRound3LowScore: false,
-            round4Score: '-',
-            shotRound4LowScore: false,
-            currentRound: null,
-            currentRoundScore: null,
-            thru: '-',
-            cumulativeScore: '-',
-            totalScore: 0,
-            isAppUser: true,
-            isMe: competitor.id === userId,
-            subRows: [],
-        };
+}: TournamentFieldPerformanceProps): TournamentPerformance[] => {
+    const userPicks = picks.filter(pick => pick.user_id === userId)
 
-        return {
-            ...acc,
-            [competitor.id]: newPerformance,
-        };
-    }, {});
-
-    picks.forEach((pick) => {
+    const data = field.map((pick) => {
         const playerFieldEntry = field.find((player) => player.player_id === pick?.player_id)!
 
-        competitorPerformance[pick.user_id!].subRows.push({
+        return {
             currentPosition: playerFieldEntry.current_position ?? '-',
             iconUrl: playerFieldEntry.player_icon_url ?? '/bph.webp',
             displayName: playerFieldEntry.player_first_name!.slice(0, 1) + '. ' + playerFieldEntry.player_last_name,
@@ -272,43 +256,17 @@ const present = ({
             thru: (playerFieldEntry.current_thru || new Date(playerFieldEntry.latest_tee_time!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) ?? '-',
             cumulativeScore: playerFieldEntry.current_total_score ?? '-',
             totalScore: playerFieldEntry.scoring_total_score,
-            isAppUser: false,
-            isMe: false,
+            competitorImageUrls: picks.filter(innerPick => pick.player_id === innerPick.player_id && innerPick.user_id !== userId)
+                .map(pick => pick.user_image_url),
+            isMe: userPicks.map(p => p.player_id).includes(pick.player_id),
             selectionCount: picks.filter(innerPick => pick.player_id === innerPick.player_id).length,
             subRows: [],
-        })
-    })
+        }
+    }).sort((a, b) => (parseScore(a.cumulativeScore!) || 1000) - (parseScore(b.cumulativeScore!) || 1000))
 
-    Object.values(competitorPerformance).forEach(performance => {
-        performance.round1Score = performance.subRows.reduce((acc, row) => acc + (parseScore(row.round1Score) || 0), 0).toString()
-        performance.round2Score = performance.subRows.reduce((acc, row) => acc + (parseScore(row.round2Score) || 0), 0).toString()
-        performance.round3Score = performance.subRows.reduce((acc, row) => acc + (parseScore(row.round3Score) || 0), 0).toString()
-        performance.round4Score = performance.subRows.reduce((acc, row) => acc + (parseScore(row.round4Score) || 0), 0).toString()
-        performance.shotRound1LowScore = performance.subRows.reduce((acc, row) => acc || row.shotRound1LowScore, false)
-        performance.shotRound2LowScore = performance.subRows.reduce((acc, row) => acc || row.shotRound2LowScore, false)
-        performance.shotRound3LowScore = performance.subRows.reduce((acc, row) => acc || row.shotRound3LowScore, false)
-        performance.shotRound4LowScore = performance.subRows.reduce((acc, row) => acc || row.shotRound4LowScore, false)
-        performance.cumulativeScore = performance.subRows.reduce((acc, row) => acc + (parseScore(row.cumulativeScore) || 0), 0).toString()
-        performance.totalScore = performance.subRows.reduce((acc, row) => acc + (row.totalScore || 0), 0)
-        performance.subRows = performance.subRows.sort((a, b) => a.selectionCount! - b.selectionCount!)
-
-        const thru = performance.subRows.reduce((acc, row) => Math.min(acc, parseThru(row.thru)), 18)
-        performance.thru = thru < 18 ? thru.toString() : 'F'
-        
-        performance.currentRoundScore = presentScore(performance.subRows.reduce((acc, row) => acc + (parseScore(row.currentRoundScore) || 0), 0))
-    })
-
-    const totalScores = Object.values(competitorPerformance).map((performance) => performance.totalScore).sort((a, b) => b! - a!)
-
-    Object.values(competitorPerformance).forEach(performance => {
-        const positionNumberString = (totalScores.indexOf(performance.totalScore!) + 1).toString()
-        const isTied = totalScores.filter(score => score === performance.totalScore!).length > 1
-        performance.currentPosition = isTied ? 'T' + positionNumberString : positionNumberString
-    })
-
-    return Object.values(competitorPerformance).sort((a, b) => b.totalScore! - a.totalScore!)
+    return data
 }
 
-export default function TournamentPicksCompetitorPerformance(props: TournamentPicksCompetitorPerformanceProps) {
+export default function TournamentFieldPerformance(props: TournamentFieldPerformanceProps) {
     return <DataTable columns={columnDef} data={present(props)} getSubRows={row => row.subRows}/>
 }
