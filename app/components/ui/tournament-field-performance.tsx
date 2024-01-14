@@ -257,7 +257,7 @@ const present = ({
             cumulativeScore: playerFieldEntry.current_total_score ?? '-',
             totalScore: playerFieldEntry.scoring_total_score,
             competitorImageUrls: picks.filter(innerPick => pick.player_id === innerPick.player_id && innerPick.user_id !== userId)
-                .map(pick => pick.user_image_url),
+                .map(pick => pick.user_image_url!),
             isMe: userPicks.map(p => p.player_id).includes(pick.player_id),
             selectionCount: picks.filter(innerPick => pick.player_id === innerPick.player_id).length,
             subRows: [],
