@@ -67,9 +67,10 @@ export type TournamentProps = {
     field: PGATourTournamentFieldStrokePlayEnriched[],
     competitors: User[],
     picks: PGATourTournamentPickStrokePlayEnriched[],
+    segmentPicks: PGATourTournamentPickStrokePlayEnriched[],
 }
 
-export default function Tournament({ tournament, field, competitors, picks }: TournamentProps) {
+export default function Tournament({ tournament, field, competitors, picks, segmentPicks }: TournamentProps) {
     const { getToken, userId, isSignedIn } = useAuth()
     const [pickEditIndex, setPickEditIndex] = useState<number | null>(null)
     const [myPicks, setMyPicks] = useState<PGATourTournamentPickStrokePlayEnriched[]>(
@@ -87,6 +88,16 @@ export default function Tournament({ tournament, field, competitors, picks }: To
         ...competitor,
         picks: ensurePicks(picks.filter((pick) => pick.user_id === competitor.id))
     }))
+
+    const userPicksForSegment = segmentPicks.filter((pick) => pick.user_id === userId).reduce((acc, pick) => {
+        if (!acc[pick.player_id!]) {
+            acc[pick.player_id!] = new Set()
+        }
+
+        acc[pick.player_id!].add(pick.tournament_id!)
+
+        return acc
+    }, {} as Record<string, Set<string>>)
 
     return ['IN_PROGRESS', 'COMPLETED'].includes(tournament.status || 'invalid_status') ? (
         <div className="grid grid-cols-1 content-between h-full gap-1">
@@ -136,7 +147,7 @@ export default function Tournament({ tournament, field, competitors, picks }: To
                         </DrawerTitle>
                     </DrawerHeader>
 
-                    <PlayerSelector field={field} onPlayerSelect={async (playerId) => {
+                    <PlayerSelector field={field} userPicksForSegment={userPicksForSegment} onPlayerSelect={async (playerId) => {
                         const client = await supabaseClient(getToken)
                         const player = field.find((player) => player.player_id === playerId)!
                         const madePick = await makePickForUser(client, userId, 1, player, pickEditIndex!)

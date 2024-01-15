@@ -91,7 +91,7 @@ export default function FilterableTournamentList({ tournaments }: { tournaments:
                     .map(({ segment, tournaments, datesDisplay }) => {
                         return <Collapsible defaultOpen={ segment === '1'} className="group" key={`collapsible-segment-${segment}`}>
                             <CollapsibleTrigger >
-                                <div className="flex flex-row py-2 px-4 justify-between items-center w-[90vw] bg-purple-600 rounded-full text-white mb-2">
+                                <div className="flex flex-row py-2 px-4 justify-between items-center w-[90vw] bg-purple-500 rounded-full text-white mb-2">
                                     <div className="flex flex-row">
                                         <ChevronRight className="group-data-[state=open]:hidden" />
                                         <ChevronDown className="group-data-[state=closed]:hidden" />
