@@ -33,8 +33,8 @@ export default function PlayerSelector({ onPlayerSelect, field, userPicksForSegm
                 const pickedCount = userPicksForSegment[player.player_id!]?.size ?? 0
                 const picksRemaining = 3 - pickedCount
                 const picksRemainingIconColor = [
-                    'bg-red-600',
-                    'bg-yellow-600',
+                    'bg-red-500',
+                    'bg-yellow-500',
                     'bg-green-500',
                     'bg-green-500',
                 ][picksRemaining]

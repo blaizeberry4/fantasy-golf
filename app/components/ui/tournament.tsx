@@ -52,7 +52,7 @@ async function makePickForUser(
         league_id: leagueId,
         pick_index: pickIndex,
         updated_at: new Date().toISOString()
-    }], { ignoreDuplicates: false, onConflict: 'user_id,tournament_id,pick_index' }).select()
+    }], { ignoreDuplicates: false, onConflict: 'user_id,tournament_id,league_id,pick_index' }).select()
 
     if (error) {
         console.error(error)
@@ -136,6 +136,7 @@ export default function Tournament({ tournament, field, competitors, picks, segm
                 <TournamentPicksUser
                     picks={myPicks}
                     field={field}
+                    userPicksForSegment={userPicksForSegment}
                     onSlotClick={(index: number) => { setPickEditIndex(index) }}
                 />
             </div>
