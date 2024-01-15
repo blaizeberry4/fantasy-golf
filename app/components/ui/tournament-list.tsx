@@ -89,7 +89,7 @@ export default function FilterableTournamentList({ tournaments }: { tournaments:
             <div className="mx-6 pb-3">
                 {segments
                     .map(({ segment, tournaments, datesDisplay }) => {
-                        return <Collapsible defaultOpen={ segment === '1'} className="group">
+                        return <Collapsible defaultOpen={ segment === '1'} className="group" key={`collapsible-segment-${segment}`}>
                             <CollapsibleTrigger >
                                 <div className="flex flex-row py-2 px-4 justify-between items-center w-[90vw] bg-purple-600 rounded-full text-white mb-2">
                                     <div className="flex flex-row">
@@ -104,8 +104,8 @@ export default function FilterableTournamentList({ tournaments }: { tournaments:
                             </CollapsibleTrigger>
                             <CollapsibleContent>
                                 <div className="grid grid-cols-1 gap-2 mb-2 max-h-[55vh] overflow-scroll">
-                                    {tournaments.map((tournament) => {
-                                        return <TournamentCard tournament={tournament} />
+                                    {tournaments.map((tournament, index) => {
+                                        return <TournamentCard tournament={tournament} key={`tournament-${index}`} />
                                     })}
                                 </div>
                             </CollapsibleContent>
