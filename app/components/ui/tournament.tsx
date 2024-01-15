@@ -87,29 +87,34 @@ export default function Tournament({ tournament, field, competitors, picks }: To
     }))
 
     return ['IN_PROGRESS', 'COMPLETED'].includes(tournament.status || 'invalid_status') ? (
-        <div className="flex flex-col">
-            <div className="sticky top-0 bg-white">
-                <TournamentBanner tournamentDetails={tournament} />
-                <ToggleGroup type="single">
-                    <ToggleGroupItem value="picks" onClick={() => setTableView('picks')}>PUP Board</ToggleGroupItem>
-                    <ToggleGroupItem value="field" onClick={() => setTableView('field')}>Leaderboard</ToggleGroupItem>
+        <div className="grid grid-cols-1 content-between h-full gap-1">
+            {/* <div className="sticky top-0 bg-white"> */}
+                <div className="grid grid-cols-1 max-h-128 overflow-scroll">
+                    <div className="sticky">
+                        <TournamentBanner tournamentDetails={tournament} />
+                    </div>
+                    <div className="flex overflow-auto">
+                        { tableView === 'picks' ? (<TournamentPicksCompetitorPerformance
+                            tournament={tournament}
+                            field={field}
+                            competitors={competitors}
+                            picks={picks}
+                            userId={userId}
+                        />) : '' }
+                        { tableView === 'field' ? (<TournamentFieldPerformance
+                            tournament={tournament}
+                            field={field}
+                            competitors={competitors}
+                            picks={picks}
+                            userId={userId}
+                        />) : '' }
+                    </div>
+                </div>
+                <ToggleGroup type="single" value={tableView} className="py-2 text-white">
+                    <ToggleGroupItem className="border rounded-l-full" value="picks" onClick={() => setTableView('picks')}>PUP Board</ToggleGroupItem>
+                    <ToggleGroupItem className="border rounded-r-full" value="field" onClick={() => setTableView('field')}>Leaderboard</ToggleGroupItem>
                 </ToggleGroup>
-
-                { tableView === 'picks' ? (<TournamentPicksCompetitorPerformance
-                    tournament={tournament}
-                    field={field}
-                    competitors={competitors}
-                    picks={picks}
-                    userId={userId}
-                />) : '' }
-                { tableView === 'field' ? (<TournamentFieldPerformance
-                    tournament={tournament}
-                    field={field}
-                    competitors={competitors}
-                    picks={picks}
-                    userId={userId}
-                />) : '' }
-            </div>
+            {/* </div> */}
         </div>
     ) : (
         <div className="flex flex-col">

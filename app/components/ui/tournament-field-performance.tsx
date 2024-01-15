@@ -57,7 +57,7 @@ export function DataTable<TData, TValue>({
   return (
     <div className="rounded-md border">
       <Table>
-        <TableHeader>
+        <TableHeader className="sticky">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
@@ -89,11 +89,7 @@ export function DataTable<TData, TValue>({
                 // data-state={row.getIsSelected() && "selected"}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className={`${
-                        row.getParentRow() ? 'p-1 text-xs'
-                            : row.getIsExpanded() ? 'p-4 text-sm text-white'
-                                : 'p-4 text-sm'
-                    } text-center`}>
+                  <TableCell key={cell.id} className={'p-1 text-xs text-center'}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -227,6 +223,16 @@ export type TournamentFieldPerformanceProps = {
     userId: string,
 }
 
+const sortField = (a: TournamentPerformance, b: TournamentPerformance) => {
+    const aPosition = a.currentPosition?.match(/T?\d+/) ? parseInt(a.currentPosition.replace('T', '')) : 1000
+    const bPosition = b.currentPosition?.match(/T?\d+/) ? parseInt(b.currentPosition.replace('T', '')) : 1000
+
+    const aScore = parseScore(a.cumulativeScore) || 1000
+    const bScore = parseScore(b.cumulativeScore) || 1000
+
+    return aPosition * 10000 + aScore - (bPosition * 10000 + bScore)
+}
+
 const present = ({
     competitors,
     picks,
@@ -262,7 +268,7 @@ const present = ({
             selectionCount: picks.filter(innerPick => pick.player_id === innerPick.player_id).length,
             subRows: [],
         }
-    }).sort((a, b) => (parseScore(a.cumulativeScore!) || 1000) - (parseScore(b.cumulativeScore!) || 1000))
+    }).sort(sortField)
 
     return data
 }
