@@ -19,6 +19,7 @@ const loadEventPageData = async (eventId: string) => {
         .from('pga_tour_tournament_picks_stroke_play_enriched')
         .select('*')
         .eq('tournament_id', eventId)
+        .eq('league_id', 1)
 
     const competitorsQuery = supabase.from('users').select('*')
 

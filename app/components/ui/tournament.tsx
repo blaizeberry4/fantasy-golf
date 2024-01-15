@@ -40,14 +40,16 @@ function ensurePicks(picks: PGATourTournamentPickStrokePlayEnriched[]): PGATourT
 
 async function makePickForUser(
     supabase: SupabaseClient<Database>,
-    user_id: string,
+    userId: string,
+    leagueId: number,
     player: PGATourTournamentFieldStrokePlayEnriched,
     pickIndex: number
 ) {
     const { data, error } = await supabase.from('pga_tour_tournament_picks_stroke_play').upsert([{
         tournament_id: player.tournament_id!,
         player_id: player.player_id!,
-        user_id: user_id,
+        user_id: userId,
+        league_id: leagueId,
         pick_index: pickIndex,
         updated_at: new Date().toISOString()
     }], { ignoreDuplicates: false, onConflict: 'user_id,tournament_id,pick_index' }).select()
@@ -137,7 +139,7 @@ export default function Tournament({ tournament, field, competitors, picks }: To
                     <PlayerSelector field={field} onPlayerSelect={async (playerId) => {
                         const client = await supabaseClient(getToken)
                         const player = field.find((player) => player.player_id === playerId)!
-                        const madePick = await makePickForUser(client, userId, player, pickEditIndex!)
+                        const madePick = await makePickForUser(client, userId, 1, player, pickEditIndex!)
                         myPicks[pickEditIndex!] = {
                             ...madePick,
                             pick_created_at: madePick.created_at,

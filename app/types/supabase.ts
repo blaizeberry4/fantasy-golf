@@ -9,6 +9,105 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      league_members: {
+        Row: {
+          created_at: string
+          created_by: string
+          league_id: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          league_id: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          league_id?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "league_members_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "pga_tour_tournament_picks_stroke_play_enriched"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "league_members_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "league_members_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "league_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "pga_tour_tournament_picks_stroke_play_enriched"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "league_members_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      leagues: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: never
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: never
+          name?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leagues_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "pga_tour_tournament_picks_stroke_play_enriched"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "leagues_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       pga_tour_players: {
         Row: {
           country: string | null
@@ -126,6 +225,7 @@ export interface Database {
       pga_tour_tournament_picks_stroke_play: {
         Row: {
           created_at: string
+          league_id: number
           pick_index: number
           player_id: string
           tournament_id: string
@@ -134,6 +234,7 @@ export interface Database {
         }
         Insert: {
           created_at?: string
+          league_id: number
           pick_index: number
           player_id: string
           tournament_id: string
@@ -142,6 +243,7 @@ export interface Database {
         }
         Update: {
           created_at?: string
+          league_id?: number
           pick_index?: number
           player_id?: string
           tournament_id?: string
@@ -149,6 +251,13 @@ export interface Database {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "pga_tour_tournament_picks_stroke_play_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "pga_tour_tournament_picks_stroke_play_player_id_fkey"
             columns: ["player_id"]
@@ -211,6 +320,7 @@ export interface Database {
           purse: string | null
           raw_json: Json | null
           season: string | null
+          segment: string | null
           start_date: string
           state: string | null
           state_code: string | null
@@ -233,6 +343,7 @@ export interface Database {
           purse?: string | null
           raw_json?: Json | null
           season?: string | null
+          segment?: string | null
           start_date: string
           state?: string | null
           state_code?: string | null
@@ -255,6 +366,7 @@ export interface Database {
           purse?: string | null
           raw_json?: Json | null
           season?: string | null
+          segment?: string | null
           start_date?: string
           state?: string | null
           state_code?: string | null
@@ -355,6 +467,7 @@ export interface Database {
       }
       pga_tour_tournament_picks_stroke_play_enriched: {
         Row: {
+          league_id: number | null
           pick_created_at: string | null
           pick_index: number | null
           pick_updated_at: string | null
@@ -376,6 +489,13 @@ export interface Database {
           user_last_name: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "pga_tour_tournament_picks_stroke_play_league_id_fkey"
+            columns: ["league_id"]
+            isOneToOne: false
+            referencedRelation: "leagues"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "pga_tour_tournament_picks_stroke_play_player_id_fkey"
             columns: ["player_id"]
