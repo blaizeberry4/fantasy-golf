@@ -103,6 +103,24 @@ export default function Tournament({ tournament, field, competitors, picks, segm
         return acc
     }, {} as Record<string, Set<string>>)
 
+    const competitorPicksForSegment = segmentPicks.filter((pick) => pick.user_id !== userId).reduce((acc, pick) => {
+        if (!pick?.player_id) {
+            return acc
+        }
+
+        if (!acc[pick.user_id!]) {
+            acc[pick.user_id!] = {}
+        }
+
+        if (!acc[pick.user_id!][pick.player_id!]) {
+            acc[pick.user_id!][pick.player_id!] = new Set()
+        }
+
+        acc[pick.user_id!][pick.player_id!].add(pick.tournament_id!)
+
+        return acc
+    }, {} as Record<string, Record<string, Set<string>>>)
+
     return ['IN_PROGRESS', 'COMPLETED'].includes(tournament.status || 'invalid_status') ? (
         <div className="grid grid-cols-1 content-between h-full gap-1">
             {/* <div className="sticky top-0 bg-white"> */}
@@ -188,6 +206,7 @@ export default function Tournament({ tournament, field, competitors, picks, segm
                                 competitor={competitor}
                                 picks={competitor.picks}
                                 field={field}
+                                competitorPicksForSegment={competitorPicksForSegment[competitor.id!]}
                                 key={`tournament-${tournament.id}-competitor-${competitor.id}-picks`}
                             />
                         })

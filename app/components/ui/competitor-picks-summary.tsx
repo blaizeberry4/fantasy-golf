@@ -8,10 +8,11 @@ export type CompetitorPicksSummaryProps = {
     competitor: User,
     picks: PGATourTournamentPickStrokePlayEnriched[],
     field: PGATourTournamentFieldStrokePlayEnriched[],
+    competitorPicksForSegment: Record<string, Set<string>>,
 }
 
 
-export default function CompetitorPicksSummary({ competitor, picks, field }: CompetitorPicksSummaryProps) {
+export default function CompetitorPicksSummary({ competitor, picks, field, competitorPicksForSegment }: CompetitorPicksSummaryProps) {
     const competitorName = `${competitor.first_name} ${competitor.last_name.slice(0, 1)}.`
 
     return (
@@ -28,11 +29,23 @@ export default function CompetitorPicksSummary({ competitor, picks, field }: Com
                 const playerOddsAndTeeTime = pick ?
                     <p className="ml-4 text-xs font-bold">{playerFieldEntry?.latest_odds_to_win}</p> :
                     <p className="ml-4 text-xs font-bold">--</p>
+                
+                const pickedCount = pick ? competitorPicksForSegment[pick.player_id!]?.size ?? 0 : 0
+                const picksRemaining = 3 - pickedCount
+                const picksRemainingIconColor = [
+                    'bg-red-500',
+                    'bg-yellow-500',
+                    'bg-green-500',
+                    'bg-green-500',
+                ][picksRemaining]
 
                 return (
                     <div className="flex flex-row items-center justify-between" key={`event-competitors-${index}`}>
                         <Image src={src} alt={playerName} className="rounded-full" height={24} width={24}/>
-                        <p className="ml-2 text-sm">{playerName}</p>
+                        <div className="flex flex-row items-center">
+                            <p className="ml-2 text-sm">{playerName}</p>
+                            {pick && <div className={`rounded-full w-3 h-3 ml-2 ${picksRemainingIconColor} text-center text-white text-[8px]`}>{picksRemaining}</div>}
+                        </div>
                         {playerOddsAndTeeTime}
                     </div>
                 )
