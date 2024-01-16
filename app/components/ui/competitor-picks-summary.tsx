@@ -26,8 +26,8 @@ export default function CompetitorPicksSummary({ competitor, picks, field }: Com
                 const playerName = pick ? pick.player_first_name! + ' ' + pick.player_last_name! : `Player ${index + 1}`
                 const playerFieldEntry = field.find((player) => player.player_id === pick?.player_id)
                 const playerOddsAndTeeTime = pick ?
-                    <p className="ml-4 text-xs font-bold">{playerFieldEntry?.latest_tee_time} / {playerFieldEntry?.latest_odds_to_win}</p> :
-                    <p className="ml-4 text-xs font-bold">-- / --</p>
+                    <p className="ml-4 text-xs font-bold">{playerFieldEntry?.latest_odds_to_win}</p> :
+                    <p className="ml-4 text-xs font-bold">--</p>
 
                 return (
                     <div className="flex flex-row items-center justify-between" key={`event-competitors-${index}`}>

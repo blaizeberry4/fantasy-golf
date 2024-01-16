@@ -21,11 +21,14 @@ export default function TournamentPicksUser({ field, picks, userPicksForSegment,
                 
                 const playerFieldEntry = field.find((player) => player.player_id === pick?.player_id)
 
-                if (!userPicksForSegment[pick.player_id!]) {
-                    userPicksForSegment[pick.player_id!] = new Set<string>()
+                if (pick) {
+                    if (!userPicksForSegment[pick.player_id!]) {
+                        userPicksForSegment[pick.player_id!] = new Set<string>()
+                    }
+                    userPicksForSegment[pick.player_id!].add(pick.tournament_id!)
                 }
-                userPicksForSegment[pick.player_id!].add(pick.tournament_id!)
-                const pickedCount = userPicksForSegment[pick.player_id!]?.size ?? 0
+
+                const pickedCount = pick ? userPicksForSegment[pick.player_id!]?.size ?? 0 : 0
                 const picksRemaining = 3 - pickedCount
                 const picksRemainingIconColor = [
                     'bg-red-500',
@@ -40,6 +43,11 @@ export default function TournamentPicksUser({ field, picks, userPicksForSegment,
                         <p className="text-xs font-bold text-center">{playerFieldEntry?.latest_odds_to_win}</p>
                     </div> :
                     <p className="text-xs font-bold text-center">--</p>
+
+                const playerTeeTime = playerFieldEntry?.latest_tee_time &&
+                    <p className="text-xs font-bold text-center">{
+                        format(new Date(playerFieldEntry?.latest_tee_time + 'Z'), 'h:mm a')}
+                    </p>
                 
                 return (
                     <button type="button" key={`tournament-pick-${index}`} onClick={() => onSlotClick(index)}>
@@ -54,7 +62,7 @@ export default function TournamentPicksUser({ field, picks, userPicksForSegment,
                                 {playerScoringSummary}
                             </div>
                             <div className="flex justify-center">
-                            <p className="text-xs font-bold text-center">{format(new Date(playerFieldEntry?.latest_tee_time + 'Z'), 'h:mm a')}</p>
+                                {playerTeeTime}
                             </div>
                         </div>
                     </button>
