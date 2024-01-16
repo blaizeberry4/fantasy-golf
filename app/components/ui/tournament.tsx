@@ -90,6 +90,10 @@ export default function Tournament({ tournament, field, competitors, picks, segm
     }))
 
     const userPicksForSegment = segmentPicks.filter((pick) => pick.user_id === userId).reduce((acc, pick) => {
+        if (!pick?.player_id) {
+            return acc
+        }
+
         if (!acc[pick.player_id!]) {
             acc[pick.player_id!] = new Set()
         }
