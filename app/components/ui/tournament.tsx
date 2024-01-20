@@ -24,7 +24,7 @@ import { format } from "date-fns";
 
 
 
-const REFRESH_INTERVAL = 1000 * 60 * 5
+const REFRESH_INTERVAL = 1000 * 60 * 1
 const REQUIRED_PICKS = 4
 
 function ensurePicks(picks: PGATourTournamentPickStrokePlayEnriched[]): PGATourTournamentPickStrokePlayEnriched[] {
