@@ -167,7 +167,7 @@ export default function Tournament({ tournament, field, competitors, picks, segm
                             userId={userId}
                         />) : '' }
                     </div>
-                    <div><p className="text-right text-sm italic mr-2 mt-1">Last Update: {format(new Date(tournament.updated_at! + 'Z'), 'M/d h:mm a')}</p></div>
+                    <div><p className="text-right text-xs italic mr-3 mt-2 text-gray-500">Last Update: {format(new Date(tournament.updated_at! + 'Z'), 'M/d h:mm a')}</p></div>
                 </div>
                 <ToggleGroup type="single" value={tableView} className="py-2 text-white">
                     <ToggleGroupItem className="border rounded-l-full" value="picks" onClick={() => setTableView('picks')}>PUP Board</ToggleGroupItem>
