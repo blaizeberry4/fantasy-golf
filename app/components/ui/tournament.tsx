@@ -148,7 +148,6 @@ export default function Tournament({ tournament, field, competitors, picks, segm
         <div className="grid grid-cols-1 content-between h-full gap-1">
             {/* <div className="sticky top-0 bg-white"> */}
                 <div className="grid grid-cols-1 max-h-128 overflow-scroll">
-                    <p>{tournament.updated_at}</p>
                     <div className="sticky">
                         <TournamentBanner tournamentDetails={tournament} />
                     </div>
