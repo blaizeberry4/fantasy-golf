@@ -80,10 +80,6 @@ export default function Tournament({ tournament, field, competitors, picks, segm
     )
     const [tableView, setTableView] = useState<'field' | 'picks'>('picks')
     const router = useRouter()
-
-    if (!isSignedIn) {
-        return <div>Sign in to view this page</div>
-    }
     
     const me = competitors.find(competitor => competitor.id === userId)
 
@@ -135,7 +131,6 @@ export default function Tournament({ tournament, field, competitors, picks, segm
         }
 
         if (tournament.status === 'IN_PROGRESS') {
-
             if (now.getTime() - lastUpdated.getTime() > REFRESH_INTERVAL) {
                 doRefresh()
             } else {
@@ -143,6 +138,10 @@ export default function Tournament({ tournament, field, competitors, picks, segm
             }
         }
     }, [tournament, router])
+
+    if (!isSignedIn) {
+        return <div>Sign in to view this page</div>
+    }
 
     return ['IN_PROGRESS', 'COMPLETED'].includes(tournament.status || 'invalid_status') ? (
         <div className="grid grid-cols-1 content-between h-full gap-1">
