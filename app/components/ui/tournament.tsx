@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { supabaseClient } from "@/lib/supabase";
 import { PGATourTournament, PGATourTournamentFieldStrokePlayEnriched, PGATourTournamentPickStrokePlayEnriched, User } from "@/types/supabase-derived";
@@ -19,9 +19,11 @@ import PlayerSelector from "@/components/ui/player-selector";
 import TournamentPicksCompetitorPerformance from "./tournament-picks-competitor-performance";
 import TournamentFieldPerformance from "./tournament-field-performance";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
+import { useRouter } from 'next/navigation';
 
 
 
+const REFRESH_INTERVAL = 1000 * 60 * 5
 const REQUIRED_PICKS = 4
 
 function ensurePicks(picks: PGATourTournamentPickStrokePlayEnriched[]): PGATourTournamentPickStrokePlayEnriched[] {
@@ -77,6 +79,7 @@ export default function Tournament({ tournament, field, competitors, picks, segm
         ensurePicks(picks.filter(pick => pick.user_id === userId))
     )
     const [tableView, setTableView] = useState<'field' | 'picks'>('picks')
+    const router = useRouter()
 
     if (!isSignedIn) {
         return <div>Sign in to view this page</div>
@@ -121,10 +124,31 @@ export default function Tournament({ tournament, field, competitors, picks, segm
         return acc
     }, {} as Record<string, Record<string, Set<string>>>)
 
+    useEffect(() => {
+        const lastUpdated = new Date(tournament.updated_at + 'Z')
+        const now = new Date()
+
+        const doRefresh = async () => {
+            await fetch(`/api/events/${tournament.id!}/refresh-field`)
+
+            router.refresh()
+        }
+
+        if (tournament.status === 'IN_PROGRESS') {
+
+            if (now.getTime() - lastUpdated.getTime() > REFRESH_INTERVAL) {
+                doRefresh()
+            } else {
+                setTimeout(doRefresh, REFRESH_INTERVAL - (now.getTime() - lastUpdated.getTime()))
+            }
+        }
+    }, [tournament, router])
+
     return ['IN_PROGRESS', 'COMPLETED'].includes(tournament.status || 'invalid_status') ? (
         <div className="grid grid-cols-1 content-between h-full gap-1">
             {/* <div className="sticky top-0 bg-white"> */}
                 <div className="grid grid-cols-1 max-h-128 overflow-scroll">
+                    <p>{tournament.updated_at}</p>
                     <div className="sticky">
                         <TournamentBanner tournamentDetails={tournament} />
                     </div>
