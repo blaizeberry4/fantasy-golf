@@ -279,6 +279,10 @@ const present = ({
         })
     })
 
+    const compareTimes(t1, t2) {
+
+    }
+
     Object.values(competitorPerformance).forEach(performance => {
         performance.round1Score = performance.subRows.reduce((acc, row) => acc + (parseScore(row.round1Score) || 0), 0).toString()
         performance.round2Score = performance.subRows.reduce((acc, row) => acc + (parseScore(row.round2Score) || 0), 0).toString()
@@ -292,8 +296,14 @@ const present = ({
         performance.totalScore = performance.subRows.reduce((acc, row) => acc + (row.totalScore || 0), 0)
         performance.subRows = performance.subRows.sort((a, b) => a.selectionCount! - b.selectionCount!)
 
-        const thru = performance.subRows.reduce((acc, row) => Math.min(acc, parseThru(row.thru)), 18)
-        performance.thru = thru < 18 ? thru.toString() : 'F'
+        const roundsNotStarted = performance.subRows.filter(row => row.thru.includes(':'))
+        const temporalThru = roundsNotStarted.length ? roundsNotStarted.sort((a, b) => {
+            return new Date('2020-01-01 '+ a.thru!).getTime() - new Date('2020-01-01 '+ b.thru!).getTime()
+        })[0].thru : null
+        const numericThru = roundsNotStarted.length ? null
+            : performance.subRows.reduce((acc, row) => Math.min(acc, parseThru(row.thru)), 18)
+        performance.thru = temporalThru ? temporalThru 
+            : numericThru && numericThru < 18 ? numericThru.toString() : 'F'
         
         performance.currentRoundScore = presentScore(performance.subRows.reduce((acc, row) => acc + (parseScore(row.currentRoundScore) || 0), 0))
     })
