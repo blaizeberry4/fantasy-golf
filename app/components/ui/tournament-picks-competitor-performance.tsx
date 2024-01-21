@@ -269,7 +269,7 @@ const present = ({
             shotRound4LowScore: playerFieldEntry.scoring_shot_low_round_4_score ?? false,
             currentRound: playerFieldEntry.current_round,
             currentRoundScore: playerFieldEntry.current_round_score || 'E',
-            thru: (playerFieldEntry.current_thru || new Date(playerFieldEntry.latest_tee_time!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) ?? '-',
+            thru: (playerFieldEntry.current_thru || new Date(playerFieldEntry.latest_tee_time! + 'Z').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })) ?? '-',
             cumulativeScore: playerFieldEntry.current_total_score ?? '-',
             totalScore: playerFieldEntry.scoring_total_score,
             isAppUser: false,
