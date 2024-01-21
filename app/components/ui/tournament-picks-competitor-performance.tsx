@@ -279,10 +279,6 @@ const present = ({
         })
     })
 
-    const compareTimes(t1, t2) {
-
-    }
-
     Object.values(competitorPerformance).forEach(performance => {
         performance.round1Score = performance.subRows.reduce((acc, row) => acc + (parseScore(row.round1Score) || 0), 0).toString()
         performance.round2Score = performance.subRows.reduce((acc, row) => acc + (parseScore(row.round2Score) || 0), 0).toString()
