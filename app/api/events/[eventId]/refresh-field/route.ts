@@ -67,24 +67,24 @@ const parseLeaderboard = (leaderboardData: any) => {
 
     const fieldData = leaderboardData
         .players
-        .filter((player: any) => player.__typename === 'PlayerRowV2')
+        .filter((player: any) => player.__typename === 'PlayerRowV3')
         .map((player: any) => {
             return {
                 tournament_id: leaderboardData.id.split('-')[0],
                 player_id: player.player.id,
-                round_1_score: player.rounds[0],
-                round_2_score: player.rounds[1],
-                round_3_score: player.rounds[2],
-                round_4_score: player.rounds[3],
-                current_total_score: player.total,
-                current_position: player.position,
-                current_round: player.currentRound,
-                current_round_score: player.score,
-                current_thru: player.thru,
-                current_round_status: player.roundStatus,
-                current_status: player.playerState,
-                latest_odds_to_win: player.oddsToWin,
-                latest_tee_time: player.teeTime && player.teeTime > 0 ? new Date(player.teeTime).toISOString() : null,
+                round_1_score: player.scoringData.rounds[0],
+                round_2_score: player.scoringData.rounds[1],
+                round_3_score: player.scoringData.rounds[2],
+                round_4_score: player.scoringData.rounds[3],
+                current_total_score: player.scoringData.total,
+                current_position: player.scoringData.position,
+                current_round: player.scoringData.currentRound,
+                current_round_score: player.scoringData.score,
+                current_thru: player.scoringData.thru,
+                current_round_status: player.scoringData.roundStatus,
+                current_status: player.scoringData.playerState,
+                latest_odds_to_win: player.scoringData.oddsToWin,
+                latest_tee_time: player.scoringData.teeTime && player.scoringData.teeTime > 0 ? new Date(player.scoringData.teeTime).toISOString() : null,
                 updated_at: new Date().toISOString(),
             }
         })
