@@ -21,8 +21,8 @@ export default function CompetitorPicksSummary({ competitor, picks, field, compe
             <Image src={competitor.image_url!} alt={competitorName} className="rounded-full" height={48} width={48}/>
             {/* <p className="ml-2">{competitorName}</p> */}
         </div>
-        <div className="col-start-4 col-end-12 flex flex-col">
-            { `Picks Made: ${picks.length}`}
+        <div className="col-start-4 col-end-12 flex flex-col items-center justify-between">
+            { `Picks Made: ${picks.filter(p => p?.player_id).length}`}
             {/* { picks.map((pick, index) => {
                 const src = pick?.player_icon_url ? pick.player_icon_url : '/bph.webp'
                 const playerName = pick ? pick.player_first_name! + ' ' + pick.player_last_name! : `Player ${index + 1}`
