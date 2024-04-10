@@ -22,7 +22,8 @@ export default function CompetitorPicksSummary({ competitor, picks, field, compe
             {/* <p className="ml-2">{competitorName}</p> */}
         </div>
         <div className="col-start-4 col-end-12 flex flex-col">
-            { picks.map((pick, index) => {
+            { `Picks Made: ${picks.length}`}
+            {/* { picks.map((pick, index) => {
                 const src = pick?.player_icon_url ? pick.player_icon_url : '/bph.webp'
                 const playerName = pick ? pick.player_first_name! + ' ' + pick.player_last_name! : `Player ${index + 1}`
                 const playerFieldEntry = field.find((player) => player.player_id === pick?.player_id)
@@ -49,7 +50,7 @@ export default function CompetitorPicksSummary({ competitor, picks, field, compe
                         {playerOddsAndTeeTime}
                     </div>
                 )
-            })}
+            })} */}
         </div>
         </>
     )
