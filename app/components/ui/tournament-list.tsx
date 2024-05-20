@@ -79,6 +79,12 @@ export default function FilterableTournamentList({ tournaments }: { tournaments:
             }
         })
 
+    const now = new Date()
+    const currentSegment = segments.filter(({ tournaments }) => (
+        new Date(tournaments[0].planned_start_date!) <= now &&
+        new Date(tournaments[tournaments.length - 1].planned_end_date!) >= now
+    ))[0].segment;
+
     return (
         <>
             <div className="sticky top-0 pt-3 pb-1 bg-white flex flex-row px-6">
@@ -89,7 +95,7 @@ export default function FilterableTournamentList({ tournaments }: { tournaments:
             <div className="mx-6 pb-3">
                 {segments
                     .map(({ segment, tournaments, datesDisplay }) => {
-                        return <Collapsible defaultOpen={ segment === '1'} className="group" key={`collapsible-segment-${segment}`}>
+                        return <Collapsible defaultOpen={ segment === currentSegment} className="group" key={`collapsible-segment-${segment}`}>
                             <CollapsibleTrigger >
                                 <div className="flex flex-row py-2 px-4 justify-between items-center w-[90vw] bg-purple-500 rounded-full text-white mb-2">
                                     <div className="flex flex-row">

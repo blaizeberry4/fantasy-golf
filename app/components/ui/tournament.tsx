@@ -9,7 +9,7 @@ import {
     DrawerContent,
     DrawerHeader,
     DrawerTitle,
-} from "@/components/ui/drawer"
+} from "@/components/ui/drawer";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "@/types/supabase";
 import CompetitorPicksSummary from "@/components/ui/competitor-picks-summary";
@@ -131,7 +131,7 @@ export default function Tournament({ tournament, field, competitors, picks, segm
             router.refresh()
         }
 
-        if (tournament.status === 'IN_PROGRESS') {
+        if (tournament.status === 'IN_PROGRESS' || !field || field.length === 0) {
             if (now.getTime() - lastUpdated.getTime() > REFRESH_INTERVAL) {
                 doRefresh()
             } else {
